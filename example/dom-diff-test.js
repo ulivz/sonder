@@ -11,10 +11,10 @@ import patch  from '../src/vdom/patch'
 const ul1 = el('ul', { id: 'list' }, [
   el('li', { class: 'item', key: 1 }, ['Item 1', el('div', { class: 'child' }, ['I am the inderted content'])]),
   el('li', { class: 'item', key: 2 }, ['Item 2 Updated']),
-  el('li', { class: 'item', key: 3 }, ['Item 3'])
+  el('li', { class: 'item updated', key: 3 }, ['Item 3'])
 ])
 
-const div1 = el('div', { id: 'app' }, [ul1])
+const div1 = el('div', { id: 'app updated' }, [ul1])
 
 const ul2 = el('ul', { id: 'list' }, [
   el('li', { class: 'item', key: 1 }, ['']),
@@ -33,6 +33,7 @@ document.body.appendChild(div2El)
 const patches = diff(div2, div1)
 
 console.log(patches)
+console.log(JSON.stringify(patches))
 
 setTimeout(() => {
   patch(div2El, patches)

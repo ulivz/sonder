@@ -125,7 +125,7 @@ function reorderChildren(node, moves) {
  * @param {Object} props
  */
 function updateProps(node, props) {
-  for (const [propName, propValue] of props.entries()) {
+  for (const [propName, propValue] of Object.entries(props)) {
     if (isUndefined(propValue)) {
       node.removeAttribute(propName)
     } else {

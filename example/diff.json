@@ -1,18 +1,44 @@
 {
-  "1": [
+  "0": [
+    {
+      "type": 2,
+      "props": {
+        "id": "app"
+      }
+    }
+  ],
+  "2": [
     {
       "type": 1,
       "moves": [
         {
-          "index": 0,
-          "type": 0
-        },
-        {
-          "index": 0,
-          "item": "",
+          "index": 1,
+          "item": {
+            "tagName": "div",
+            "props": {
+              "class": "child"
+            },
+            "children": [
+              "I am the inderted content"
+            ]
+          },
           "type": 1
         }
       ]
+    }
+  ],
+  "3": [
+    {
+      "type": 3,
+      "content": "Item 1"
+    }
+  ],
+  "4": [
+    {
+      "type": 2,
+      "props": {
+        "class": "item"
+      }
     }
   ]
 }
