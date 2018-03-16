@@ -9,7 +9,7 @@
 npm i sonder
 ```
 
-## Counter
+## Usage
 
 Create a Counter component:
 
@@ -72,14 +72,6 @@ new Sounder({
 })
 ```
 
-## Usage
-
-```js
-const sonder = require('sonder')
-
-sonder()
-//=> foo
-```
 
 ## Contributing
 
