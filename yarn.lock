@@ -4567,6 +4567,10 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+list-diff2@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/list-diff2/-/list-diff2-0.1.4.tgz#8539c05c579b424b1349a34be78508d3920df958"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
