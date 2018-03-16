@@ -1,4 +1,13 @@
-export default class Counter {
+import Sonder from './sonder'
+
+export default class Counter extends Sonder.Component {
+
+  constructor() {
+    super()
+    this.state = {
+      count: 0
+    }
+  }
 
   render() {
     return `Clicked: {{ count }} times, count is {{ evenOrOdd }}.
@@ -6,12 +15,6 @@ export default class Counter {
     <button click="decrement">-</button>
     <button click="incrementIfOdd">Increment if odd</button>
     <button click="incrementAsync">Increment async</button>`
-  }
-
-  constructor() {
-    this.state = {
-      count: 0
-    }
   }
 
   increment() {

@@ -1,7 +1,16 @@
-import Sonder from './index'
+import { SonderDOM } from './sonder'
 import Counter from './Counter'
 
-new Sonder({
-  el: '#app',
-  render: h => h(Counter)
-})
+
+SonderDOM.render(
+  `<div class="app">
+      <Counter count="1">1234</Counter>
+   </div>`,
+  document.getElementById('app'),
+  { Counter }
+)
+
+// new Sonder({
+//   el: '#app',
+//   render: h => h(Counter)
+// })

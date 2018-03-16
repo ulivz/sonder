@@ -5,18 +5,28 @@ class VElement {
     this.children = children
   }
 
-  render() {
+  render(Components = {}, instances = {}) {
+    if (Components && Components[this.tagName]) {
+      let Component = Components[this.tagName]
+      let component = instances[this.tagName] = new Component()
+      const div = document.createElement('div')
+      div.innerHTML = component.render()
+      return div
+    }
+
     const el = document.createElement(this.tagName)
     const props = this.props
 
-    for (const [propName, propValue] of Object.entries(props)) {
-      el.setAttribute(propName, propValue)
+    if (props) {
+      for (const [propName, propValue] of Object.entries(props)) {
+        el.setAttribute(propName, propValue)
+      }
     }
-
+    
     if (this.children) {
       for (const child of this.children) {
         const childEl = child instanceof VElement
-          ? child.render()
+          ? child.render(Components, instances)
           : document.createTextNode(child)
         el.appendChild(childEl)
       }

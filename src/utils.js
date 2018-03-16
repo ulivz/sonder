@@ -45,5 +45,28 @@ export function warn(msg) {
   console.error(`[Sonder warn]: ${msg} `)
 }
 
-export function noop() { }
+export function noop() {
+}
 
+
+function fancyShadowMerge(target, source) {
+  for (const key of Reflect.ownKeys(source)) {
+    Reflect.defineProperty(target, key, Reflect.getOwnPropertyDescriptor(source, key))
+  }
+  return target
+}
+
+export function inherit(child, parent) {
+  const objectPrototype = Object.prototype
+  const parentPrototype = Object.create(parent.prototype)
+  let childPrototype = child.prototype
+  if (Reflect.getPrototypeOf(childPrototype) === objectPrototype) {
+    child.prototype = fancyShadowMerge(parentPrototype, childPrototype)
+  } else {
+    while (Reflect.getPrototypeOf(childPrototype) !== objectPrototype) {
+      childPrototype = Reflect.getPrototypeOf(childPrototype)
+    }
+    Reflect.setPrototypeOf(childPrototype, parent.prototype)
+  }
+  parentPrototype.constructor = child
+}
