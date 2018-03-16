@@ -1,4 +1,4 @@
-const isOfType = type => x => typeof x === type // eslint-disable-line valid-typeof
+const isOfType = type => x => typeof x === type
 
 export const isString = isOfType('string')
 export const isUndefined = isOfType('undefined')

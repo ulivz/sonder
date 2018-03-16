@@ -6,9 +6,9 @@ const NO_UPDATE_PROP_NAME = 'no-update'
 
 /**
  * Diff two VElement
- * @param oldNode
- * @param newNode
- * @returns {{}}
+ * @param {VElement} oldNode
+ * @param {VElement} newNode
+ * @returns {Patch[]}
  */
 export default function diff(oldNode, newNode) {
   const index = 0
@@ -54,8 +54,8 @@ function diffProps(oldNode, newNode) {
  * Deep first walk
  * @param {VElement} oldNode
  * @param {VElement} newNode
- * @param {number} index
- * @param {object} patches
+ * @param {Number} index
+ * @param {Object} patches
  */
 function deepFirstWalk(oldNode, newNode, index, patches) {
   const currentPatch = []
@@ -100,11 +100,11 @@ function deepFirstWalk(oldNode, newNode, index, patches) {
 
 /**
  * Diff Children
- * @param oldChildren
- * @param newChildren
- * @param index
- * @param patches
- * @param currentPatch
+ * @param {VElement[]} oldChildren
+ * @param {VElement[]} newChildren
+ * @param {Number} index
+ * @param {Patches[]} patches
+ * @param {Patches} currentPatch
  */
 function diffChildren(oldChildren, newChildren, index, patches, currentPatch) {
   const diffs = listDiff(oldChildren, newChildren, 'key')
@@ -129,8 +129,8 @@ function diffChildren(oldChildren, newChildren, index, patches, currentPatch) {
 
 /**
  * For no-update feature.
- * @param node
- * @returns {*|boolean}
+ * @param {VElement} node
+ * @returns {Boolean}
  */
 function isIgnoreChildren(node) {
   return node.props && node.props.hasOwnProperty(NO_UPDATE_PROP_NAME)
