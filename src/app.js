@@ -1,6 +1,5 @@
-import { SonderDOM } from './sonder'
+import { SonderDOM } from './index'
 import Counter from './Counter'
-
 
 SonderDOM.render(
   `<div class="app">

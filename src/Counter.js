@@ -1,4 +1,4 @@
-import Sonder from './sonder'
+import Sonder from './index'
 
 export default class Counter extends Sonder.Component {
 
