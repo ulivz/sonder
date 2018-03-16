@@ -98,6 +98,14 @@ function deepFirstWalk(oldNode, newNode, index, patches) {
   }
 }
 
+/**
+ * Diff Children
+ * @param oldChildren
+ * @param newChildren
+ * @param index
+ * @param patches
+ * @param currentPatch
+ */
 function diffChildren(oldChildren, newChildren, index, patches, currentPatch) {
   const diffs = listDiff(oldChildren, newChildren, 'key')
   newChildren = diffs.children
@@ -119,10 +127,11 @@ function diffChildren(oldChildren, newChildren, index, patches, currentPatch) {
   }
 }
 
-
+/**
+ * For no-update feature.
+ * @param node
+ * @returns {*|boolean}
+ */
 function isIgnoreChildren(node) {
   return node.props && node.props.hasOwnProperty(NO_UPDATE_PROP_NAME)
 }
-
-
-
