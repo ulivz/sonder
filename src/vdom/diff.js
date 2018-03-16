@@ -1,5 +1,5 @@
 import { isString } from '../utils'
-import { REPLACE, PROPS, REORDER } from './patch'
+import { REPLACE, REORDER, PROPS, TEXT } from './patch'
 import listDiff  from 'list-diff2'
 
 const NO_UPDATE_PROP_NAME = 'no-update'
@@ -10,7 +10,7 @@ const NO_UPDATE_PROP_NAME = 'no-update'
  * @param newNode
  * @returns {{}}
  */
-function diff(oldNode, newNode) {
+export default function diff(oldNode, newNode) {
   const index = 0
   const patches = {}
   deepFirstWalk(oldNode, newNode, index, patches)
@@ -29,14 +29,14 @@ function diffProps(oldNode, newNode) {
   const newProps = newNode.props
   const propsPatches = {}
 
-  for (const oldKey of Reflect.keys(oldProps)) {
+  for (const oldKey of Object.keys(oldProps)) {
     if (newProps[oldKey] !== oldProps[oldKey]) {
       count++
       propsPatches[oldKey] = oldProps[oldKey]
     }
   }
 
-  for (const newKey of Reflect.keys(newProps)) {
+  for (const newKey of Object.keys(newProps)) {
     if (!oldProps.hasOwnProperty(newKey)) {
       count++
       propsPatches[newKey] = newProps[newKey]
@@ -61,12 +61,12 @@ function deepFirstWalk(oldNode, newNode, index, patches) {
   const currentPatch = []
 
   // Node is removed.
-  if (oldNode === null) {
+  if (newNode === null) {
     // Real DOM node will be removed when perform reordering, so has no needs to do anthings in here.
   } else if (isString(oldNode) && isString(newNode)) {
     // TextNode content replacing
     if (newNode !== oldNode) {
-      currentPatch.push({ type: REPLACE, content: newNode })
+      currentPatch.push({ type: TEXT, content: newNode })
     }
     // Nodes are the same, diff old node's props and children
   } else if (

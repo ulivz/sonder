@@ -26,31 +26,5 @@ class VElement {
   }
 }
 
-
-export function diff(oldTree, newTree) {
-  const index = 0 // Current node's label.
-  const patch = {} // Used to record every node's difference.
-  deepFirstWalk(oldTree, newTree, index, patch)
-  return patch
-}
-
-function deepFirstWalk(oldNode, newNode, index, patch) {
-  patch[index] = []
-
-}
-
-function diffChildren(oldChildren, newChildren, index, patch) {
-  let leftNode = null
-  let currentNodeIndex = index
-  for (const [i, child] of oldChildren.entries()) {
-    const newChild = newChildren[i]
-    currentNodeIndex = (leftNode && leftNode.count)
-      ? currentNodeIndex + leftNode.count + 1
-      : currentNodeIndex + 1
-    deepFirstWalk(child, newChild, currentNodeIndex, patch)
-    leftNode = child
-  }
-}
-
-export default (...props) => new Element(...props)
+export default (...props) => new VElement(...props)
 

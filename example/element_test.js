@@ -1,4 +1,5 @@
-import el, { diff }  from '../src/vdom/element'
+import el  from '../src/vdom/element'
+import diff  from '../src/vdom/diff'
 
 // <ul id='list'>
 //   <li class='item'>Item 1</li>
