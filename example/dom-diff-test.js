@@ -9,29 +9,33 @@ import patch  from '../src/vdom/patch'
 // </ul>
 
 const ul1 = el('ul', { id: 'list' }, [
-  el('li', { class: 'item' }, ['Item 1', el('div', { class: 'child' }, ['123'])]),
-  el('li', { class: 'item' }, ['Item 21']),
-  el('li', { class: 'item' }, ['Item 3'])
+  el('li', { class: 'item', key: 1 }, ['Item 1', el('div', { class: 'child' }, ['I am the inderted content'])]),
+  el('li', { class: 'item', key: 2 }, ['Item 2 Updated']),
+  el('li', { class: 'item', key: 3 }, ['Item 3'])
 ])
+
+const div1 = el('div', { id: 'app' }, [ul1])
 
 const ul2 = el('ul', { id: 'list' }, [
-  el('li', { class: 'item' }, ['']),
-  el('li', { class: 'item' }, ['Item 2']),
-  el('li', { class: 'item' }, ['Item 3'])
+  el('li', { class: 'item', key: 1 }, ['']),
+  el('li', { class: 'item', key: 2 }, ['Item 2']),
+  el('li', { class: 'item', key: 3 }, ['Item 3'])
 ])
 
-var ul1El = ul1.render()
-document.body.appendChild(ul1El)
+const div2 = el('div', { id: 'app' }, [ul2])
 
-var ul2El = ul2.render()
-document.body.appendChild(ul2El)
+var div1El = div1.render()
+document.body.appendChild(div1El)
 
-const patches = diff(ul2, ul1)
+var div2El = div2.render()
+document.body.appendChild(div2El)
+
+const patches = diff(div2, div1)
 
 console.log(patches)
 
 setTimeout(() => {
-  patch(ul2El, patches)
+  patch(div2El, patches)
 }, 1000)
 
 

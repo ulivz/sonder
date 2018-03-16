@@ -5,11 +5,22 @@ export const REORDER = 1
 export const PROPS = 2
 export const TEXT = 3
 
+/**
+ * Update dom by patches.
+ * @param {HTMLElement} node
+ * @param {Patch[]} patches
+ */
 export default function patch(node, patches) {
   const walker = { index: 0 }
   deepFirstWalk(node, walker, patches)
 }
 
+/**
+ * Deep first walk.
+ * @param {HTMLElement} node
+ * @param {Object} walker
+ * @param {Patch[]} patches
+ */
 function deepFirstWalk(node, walker, patches) {
   const currentPatches = patches[walker.index]
   if (node.childNodes.length) {
@@ -23,7 +34,11 @@ function deepFirstWalk(node, walker, patches) {
   }
 }
 
-
+/**
+ * Apply patches
+ * @param {HTMLElement} node
+ * @param {Patch[]} patches
+ */
 function applyPatches(node, currentPatches) {
   for (const currentPatch of currentPatches) {
     switch (currentPatch.type) {
@@ -37,31 +52,43 @@ function applyPatches(node, currentPatches) {
         reorderChildren(node, currentPatch.moves)
         break
       case PROPS:
-        setProps(node, currentPatch.props)
+        updateProps(node, currentPatch.props)
         break
       case TEXT:
         if (node.textContent) {
           node.textContent = currentPatch.content
         } else {
-          // fuck ie
+          // IE
           node.nodeValue = currentPatch.content
         }
         break
       default:
-        throw new Error('Unknown patch type ' + currentPatch.type)
+        throw new Error(`Unknown patch type ${currentPatch.type}`)
     }
   }
 }
 
-const MOVE_REMOVE = 0
-const MOVE_INSERT = 1
+const MOVE_TYPE = {
+  REMOVE: 0,
+  INSERT: 1
+}
 
+const NODE_TYPE = {
+  ELEMENT: 1,
+  ATTRIBUTE: 1
+}
+
+/**
+ * Reorder children.
+ * @param {HTMLElement} node
+ * @param {Move[]} patches
+ */
 function reorderChildren(node, moves) {
   const staticNodeList = [...node.childNodes]
   const maps = {}
 
   for (const childNode of staticNodeList) {
-    if (childNode.nodeType === 1) {
+    if (childNode.nodeType === NODE_TYPE.ELEMENT) {
       maps[childNode.getAttribute('key')] = childNode
     }
   }
@@ -70,7 +97,7 @@ function reorderChildren(node, moves) {
     const index = move.index
 
     // Remove
-    if (move.type === MOVE_REMOVE) {
+    if (move.type === MOVE_TYPE.REMOVE) {
       // maybe have been removed for inserting
       if (staticNodeList[index] === node.childNodes[index]) {
         node.removeChild(node.childNodes[index])
@@ -79,7 +106,7 @@ function reorderChildren(node, moves) {
     }
 
     // Insert
-    else if (move.type === MOVE_INSERT) {
+    else if (move.type === MOVE_TYPE.INSERT) {
       const insertNode = maps[move.item.key]
         ? maps[move.item.key].cloneNode(true)
         : typeof move.item === 'object'
@@ -92,7 +119,12 @@ function reorderChildren(node, moves) {
   }
 }
 
-function setProps(node, props) {
+/**
+ * Update props
+ * @param {HTMLElement} node
+ * @param {Object} props
+ */
+function updateProps(node, props) {
   for (const [propName, propValue] of props.entries()) {
     if (isUndefined(propValue)) {
       node.removeAttribute(propName)
