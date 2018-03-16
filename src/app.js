@@ -1,7 +1,7 @@
-import Sounder from './index'
+import Sonder from './index'
 import Counter from './Counter'
 
-new Sounder({
+new Sonder({
   el: '#app',
   render: h => h(Counter)
 })
