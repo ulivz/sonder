@@ -1,0 +1,53 @@
+{
+  "type": 1,
+  "tag": "div",
+  "attrsList": [
+    {
+      "name": "class",
+      "value": "app",
+      "escaped": "app"
+    }
+  ],
+  "attrsMap": {
+    "class": "app"
+  },
+  "children": [
+    {
+      "type": 3,
+      "text": " "
+    },
+    {
+      "type": 1,
+      "tag": "counter",
+      "attrsList": [
+        {
+          "name": "count",
+          "value": "1",
+          "escaped": "1"
+        }
+      ],
+      "attrsMap": {
+        "count": "1"
+      },
+      "parent": "Root",
+      "children": [
+        {
+          "type": 3,
+          "text": "1234"
+        }
+      ],
+      "attrs": [
+        {
+          "name": "count",
+          "value": "\"1\""
+        }
+      ]
+    }
+  ],
+  "attrs": [
+    {
+      "name": "class",
+      "value": "\"app\""
+    }
+  ]
+}

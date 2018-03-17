@@ -1,4 +1,5 @@
-import Sonder from './index'
+import Sonder from '../index'
+import VInput from './Input'
 
 export default class Counter extends Sonder.Component {
 
@@ -7,12 +8,16 @@ export default class Counter extends Sonder.Component {
     this.state = {
       count: 0
     }
+    this.$scopeComponents = {
+      VInput
+    }
   }
 
   render() {
     return `Clicked: {{ count }} times, count is {{ evenOrOdd }}.
     <button click="increment">+</button>
     <button click="decrement">-</button>
+    <VInput></VInput>
     <button click="incrementIfOdd">Increment if odd</button>
     <button click="incrementAsync">Increment async</button>`
   }

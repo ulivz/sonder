@@ -5,12 +5,14 @@ class VElement {
     this.children = children
   }
 
-  render(Components = {}, instances = {}) {
-    if (Components && Components[this.tagName]) {
-      let Component = Components[this.tagName]
-      let component = instances[this.tagName] = new Component()
+  render(scopeComponents = {}, componentInstances = {}, parent = null) {
+    if (scopeComponents && scopeComponents[this.tagName]) {
+      let componentConstructor = scopeComponents[this.tagName]
+      let componentInstance = new componentConstructor()
+      componentInstance.$parent = parent
+      componentInstances.push(componentInstance)
       const div = document.createElement('div')
-      div.innerHTML = component.render()
+      div.innerHTML = componentInstance.render()
       return div
     }
 
@@ -22,11 +24,11 @@ class VElement {
         el.setAttribute(propName, propValue)
       }
     }
-    
+
     if (this.children) {
       for (const child of this.children) {
         const childEl = child instanceof VElement
-          ? child.render(Components, instances)
+          ? child.render(scopeComponents, componentInstances, parent)
           : document.createTextNode(child)
         el.appendChild(childEl)
       }
