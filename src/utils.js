@@ -2,6 +2,62 @@ const isOfType = type => x => typeof x === type
 
 export const isString = isOfType('string')
 export const isUndefined = isOfType('undefined')
+export const isArray = Array.isArray
+
+export function bind(fn, ctx) {
+  function boundFn(a) {
+    const l = arguments.length
+    return l
+      ? l > 1
+        ? fn.apply(ctx, arguments)
+        : fn.call(ctx, a)
+      : fn.call(ctx)
+  }
+  // record original fn length
+  boundFn._length = fn.length
+  return boundFn
+}
+
+export function noop() { }
+
+export function warn(msg) {
+  console.error(`[Evo warn]: ${msg} `)
+}
+
+export function isObject(obj) {
+  return obj !== null && typeof obj === 'object'
+}
+
+export function isFunction(obj) {
+  return typeof obj === 'function'
+}
+
+const _toString = Object.prototype.toString
+export function isPlainObject(obj) {
+  return _toString.call(obj) === '[object Object]'
+}
+
+export function query(el) {
+  if (typeof el === 'string') {
+    const selector = el
+    el = document.querySelector(el)
+    if (!el) {
+      return document.createElement('div')
+    }
+  }
+  return el
+}
+
+export function getOuterHTML(el) {
+  if (el.outerHTML) {
+    return el.outerHTML
+  } else {
+    const container = document.createElement('div')
+    container.appendChild(el.cloneNode(true))
+    return container.innerHTML
+  }
+}
+
 
 export function cached(fn) {
   const cache = Object.create(null)
@@ -20,53 +76,37 @@ export const capitalize = cached((str) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 })
 
-export function setAttribute(node, key, value) {
-  switch (key) {
-    case 'style':
-      node.style.cssText = value
-      break
-    case 'value':
-      var tagName = node.tagName || ''
-      tagName = tagName.toLowerCase()
-      if (tagName === 'input' || tagName === 'textarea') {
-        node.value = value
-      } else {
-        // if it is not a input or textarea, use `setAttribute` to set
-        node.setAttribute(key, value)
-      }
-      break
-    default:
-      node.setAttribute(key, value)
-      break
+export const idToTemplate = cached((id) => {
+  var el = query(id)
+  return el && el.innerHTML
+})
+
+export function toString(val) {
+  return val == null
+    ? ''
+    : typeof val === 'object'
+      ? JSON.stringify(val, null, 2)
+      : String(val)
+}
+
+const hasOwnProperty = Object.prototype.hasOwnProperty
+export function hasOwn(obj, key) {
+  return hasOwnProperty.call(obj, key)
+}
+
+export function resolveAsset(options, type, id) {
+  /* istanbul ignore if */
+  if (!isString(id)) {
+    return
   }
-}
-
-export function warn(msg) {
-  console.error(`[Sonder warn]: ${msg} `)
-}
-
-export function noop() {
-}
-
-
-function fancyShadowMerge(target, source) {
-  for (const key of Reflect.ownKeys(source)) {
-    Reflect.defineProperty(target, key, Reflect.getOwnPropertyDescriptor(source, key))
+  let assets = options[type]
+  if (!assets) {
+    return
   }
-  return target
-}
-
-export function inherit(child, parent) {
-  const objectPrototype = Object.prototype
-  const parentPrototype = Object.create(parent.prototype)
-  let childPrototype = child.prototype
-  if (Reflect.getPrototypeOf(childPrototype) === objectPrototype) {
-    child.prototype = fancyShadowMerge(parentPrototype, childPrototype)
-  } else {
-    while (Reflect.getPrototypeOf(childPrototype) !== objectPrototype) {
-      childPrototype = Reflect.getPrototypeOf(childPrototype)
-    }
-    Reflect.setPrototypeOf(childPrototype, parent.prototype)
-  }
-  parentPrototype.constructor = child
+  // check local registration variations first
+  if (hasOwn(assets, id)) { return assets[id] }
+  var camelizedId = camelize(id)
+  if (hasOwn(assets, camelizedId)) { return assets[camelizedId] }
+  var PascalCaseId = capitalize(camelizedId)
+  if (hasOwn(assets, PascalCaseId)) { return assets[PascalCaseId] }
 }

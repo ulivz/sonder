@@ -21,15 +21,10 @@ import {
 
 const cache = {}
 
-const TYPES = {
-  ELEMENT: 1,
-  EXPRESSION: 2,
-  TEXT: 3
-}
-
-export function compileToFunctions(template, { delimiters }) {
+export function compileToFunctions(template, vm) {
   let root
   let currentParent
+  let options = vm.$options
   let stack = []
 
   if (cache[template]) {
@@ -39,7 +34,7 @@ export function compileToFunctions(template, { delimiters }) {
   HTMLParser(template, {
     start: function (tag, attrs, unary) {
       const element = {
-        type: TYPES.ELEMENT,
+        type: 1,
         tag,
         attrsList: attrs,
         attrsMap: makeAttrsMap(attrs),
@@ -75,7 +70,7 @@ export function compileToFunctions(template, { delimiters }) {
     end: function (tag) {
       const element = stack[stack.length - 1]
       const lastNode = element.children[element.children.length - 1]
-      if (lastNode && lastNode.type === TYPES.TEXT && lastNode.text === ' ') {
+      if (lastNode && lastNode.type === 3 && lastNode.text === ' ') {
         element.children.pop()
       }
       // pop stack
@@ -87,26 +82,24 @@ export function compileToFunctions(template, { delimiters }) {
         text = ' '
       }
 
-      let expression = TextParser(text, delimiters)
+      let expression = TextParser(text, options.delimiters)
       if (expression) {
-        currentParent.children.push({
-          type: TYPES.EXPRESSION,
+        currentParent && currentParent.children.push({
+          type: 2,
           expression,
           text
         })
       } else {
-        currentParent.children.push({
-          type: TYPES.TEXT,
+        currentParent && currentParent.children.push({
+          type: 3,
           text
         })
       }
+
     },
     comment: function (text) {
     }
   })
-
-  root.children[1].parent = 'Root'
-  console.log(root)
 
   return (cache[template] = codeGen(root))
 }
@@ -154,7 +147,6 @@ function processIf(el) {
 }
 
 function processKey(el) {
-  // TODO key 优化处理
 }
 
 function processAttrs(el) {
@@ -197,22 +189,4 @@ function processAttrs(el) {
     }
   }
 }
-
-// <div class="app">
-//    <Counter count="1"></Counter>
-// </div>
-
-// function _(h, state) {
-//   with (state) {
-//     return h('div', { class: 'app' }, [h('Counter'), { count: 1 }])
-//   }
-// }
-
-export default function compile(template) {
-  return new Function('h', 'c', 'state', `with (state) {
-      return h('div', { class: 'app' }, [c('Counter', { count: 1 })])
-    }`)
-}
-
-
 

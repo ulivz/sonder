@@ -1,7 +1,7 @@
-import Sonder from '../index'
+import Component from '../sonder'
 import VInput from './Input'
 
-export default class Counter extends Sonder.Component {
+export default class Counter extends Component {
 
   constructor() {
     super()
