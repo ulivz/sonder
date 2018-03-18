@@ -3,7 +3,7 @@
 ## Usage
 
 ```js
-import observable from '../src/observer'
+import observable from 'observer'
 
 const meta = {
   name: 'ULIVZ',

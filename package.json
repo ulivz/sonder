@@ -15,7 +15,7 @@
     "test": "npm run lint && jest",
     "lint": "xo",
     "prepublish": "npm run build",
-    "build": "bili --filename index",
+    "build": "bili --format umd --name sonder --banner --exports named --js babel --no-babel.babelrc",
     "example": "poi",
     "build:example": "poi build",
     "gh": "gh-pages -d example/dist",
@@ -48,11 +48,12 @@
     }
   },
   "dependencies": {
-    "list-diff2": "^0.1.4"
+    "@nx-js/observer-util": "^4.1.2",
+    "list-diff2": "^0.1.4",
+    "snabbdom": "^0.7.1"
   },
   "devDependencies": {
     "babel-preset-env": "^1.4.0",
-    "bili": "^0.17.0",
     "eslint-config-rem": "^3.0.0",
     "gh-pages": "^1.0.0",
     "jest-cli": "^19.0.0",
