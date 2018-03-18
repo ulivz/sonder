@@ -1,4 +1,4 @@
-class VElement {
+export class VNode {
   constructor(tagName, props, children) {
     this.tagName = tagName
     this.props = props
@@ -27,7 +27,7 @@ class VElement {
 
     if (this.children) {
       for (const child of this.children) {
-        const childEl = child instanceof VElement
+        const childEl = child instanceof VNode
           ? child.render(scopeComponents, componentInstances, parent)
           : document.createTextNode(child)
         el.appendChild(childEl)
@@ -38,5 +38,7 @@ class VElement {
   }
 }
 
-export default (...props) => new VElement(...props)
+export function h(...props) {
+  return new VNode(...props)
+}
 

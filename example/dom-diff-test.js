@@ -1,4 +1,4 @@
-import el  from '../src/vdom/element'
+import el  from '../src/vdom/vnode'
 import diff  from '../src/vdom/diff'
 import patch  from '../src/vdom/patch'
 
