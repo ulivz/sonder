@@ -21,7 +21,7 @@ export function bind(fn, ctx) {
 export function noop() { }
 
 export function warn(msg) {
-  console.error(`[Evo warn]: ${msg} `)
+  console.error(`[Sonder warn]: ${msg} `)
 }
 
 export function isObject(obj) {

@@ -23,7 +23,6 @@ const MOUNTED = 'mounted'
 const BEFORE_UPDATE = 'beforeUpdate'
 const UPDATED = 'updated'
 
-
 export default function Sonder(options) {
   this.$options = options
   callHook(this, BEFROE_CREATE)
@@ -66,9 +65,15 @@ Sonder.prototype.$mount = function (el) {
     }
     if (template) {
       const render = compileToFunctions(template, this)
-      console.log(render)
+      // console.log(render)
       this.$options.render = render
     }
+  } else {
+    const Ctor = this.constructor
+    const Factory = (options) => new Ctor(options)
+    const ins = render(Factory)
+    console.log(ins)
+
   }
 
   callHook(this, BEFORE_MOUNT)
@@ -100,10 +105,14 @@ Sonder.prototype._render = function () {
   } catch (e) {
     warn(`render Error : ${e}`)
   }
+  // console.log(JSON.stringify(vnode))
   return vnode
 }
 
 Sonder.prototype._update = function (vnode) {
+  if (!vnode || !vnode.sel) {
+    warn(`_update without vnode`)
+  }
   if (this._isMounted) {
     callHook(this, BEFORE_UPDATE)
   }
@@ -122,7 +131,43 @@ Sonder.prototype._update = function (vnode) {
 }
 
 Sonder.prototype._patch = patch
+
+Sonder.prototype._createComponent = function (Ctor, data, children, sel) {
+  Ctor = mergeOptions(Ctor)
+  Ctor._isComponent = true
+  let Factory = this.constructor
+  let parentData = this.$data
+
+  data.hook.init = (vnode) => {
+    Ctor.data = Ctor.data || {}
+
+    let componentVm = new Factory(Ctor)
+
+    // Props
+    for (const [attrKey, attrValue] of Object.entries(data.attrs)) {
+      console.log(attrKey, attrValue)
+      Object.defineProperty(componentVm, attrKey, {
+        configurable: true,
+        enumerable: true,
+        get() {
+          return attrValue
+        }
+      })
+    }
+
+    observe(() => {
+      componentVm.$forceUpdate()
+    })
+
+    vnode._component = componentVm
+  }
+
+  Ctor._vnode = new VNode(sel, data, [], undefined, createElement(sel))
+  return Ctor._vnode
+}
+
 Sonder.prototype._s = toString
+
 Sonder.prototype._h = function (sel, data, children) {
   data = data || {}
 
@@ -156,44 +201,12 @@ Sonder.prototype._h = function (sel, data, children) {
   if (isString(sel)) {
     let Ctor = resolveAsset(this.$options, 'components', sel)
     if (Ctor) {
-      return this._createComponent(Ctor, data, children, sel)
+      let instance = this._createComponent(Ctor, data, children, sel)
+      return instance
     }
   }
 
   return h(sel, data, children)
-}
-
-Sonder.prototype._createComponent = function (Ctor, data, children, sel) {
-  Ctor = mergeOptions(Ctor)
-  Ctor._isComponent = true
-  let Factory = this.constructor
-  let parentData = this.$data
-
-  data.hook.init = (vnode) => {
-    Ctor.data = Ctor.data || {}
-
-    let componentVm = new Factory(Ctor)
-
-    // Props
-    for (const [attrKey, attrValue] of Object.entries(data.attrs)) {
-      Object.defineProperty(componentVm, attrKey, {
-        configurable: true,
-        enumerable: true,
-        get() {
-          return parentData[attrValue]
-        }
-      })
-    }
-
-    observe(() => {
-      componentVm.$forceUpdate()
-    })
-
-    vnode._component = componentVm
-  }
-
-  Ctor._vnode = new VNode(`vue-component-${sel}`, data, [], undefined, createElement(sel))
-  return Ctor._vnode
 }
 
 Sonder.prototype._k = function (eventKeyCode, key, builtInAlias) {
