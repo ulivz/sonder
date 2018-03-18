@@ -1,17 +1,25 @@
-export default class Counter {
+import Component from '../sonder'
+import VInput from './Input'
+
+export default class Counter extends Component {
+
+  constructor() {
+    super()
+    this.state = {
+      count: 0
+    }
+    this.$scopeComponents = {
+      VInput
+    }
+  }
 
   render() {
     return `Clicked: {{ count }} times, count is {{ evenOrOdd }}.
     <button click="increment">+</button>
     <button click="decrement">-</button>
+    <VInput></VInput>
     <button click="incrementIfOdd">Increment if odd</button>
     <button click="incrementAsync">Increment async</button>`
-  }
-
-  constructor() {
-    this.state = {
-      count: 0
-    }
   }
 
   increment() {
