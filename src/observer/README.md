@@ -35,9 +35,9 @@ ULIVZ
     console.log(`From ${oldValue} to ${newValue}`)
   })
 
-ULIVZ.name = 'XXX'
-ULIVZ.info.age = 100
-ULIVZ.info.love.writing = 'poetry'
+ULIVZ.name = 'XXX' // From ULIVZ to XXX
+ULIVZ.info.age = 100 // From 24 to 100
+ULIVZ.info.love.writing = 'poetry' // From literature to poetry
 ```
 
 
